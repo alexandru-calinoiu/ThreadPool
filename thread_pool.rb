@@ -3,12 +3,17 @@
 # pool.shutdown
 
 class ThreadPool
+	attr_reader :pool
+
 	def initialize(size:)
+		@pool = []
 	end
 
-	def schedule(&black)
+	def schedule(*args, &block)
+		@pool << Thread.new { block.call(args) }
 	end
-	
+
 	def shutdown
+		@pool.map(&:join)
 	end
 end
